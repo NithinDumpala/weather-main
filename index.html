@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Report</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<body>
+    <header class="head">
+        <h1>WEATHER FORECAST </h1>
+    </header>
+    <div class="container">
+        <input type="text" id="locationInput" placeholder="Enter city name Eg:hyderabad,goa,ahmedabad ">
+        <button id="searchButton">Search</button>
+    
+        <div class="weather-info">
+            <div id="current-weather">
+                <h2> WEATHER FOR <span id="cityentered"> </span></h2>
+                <div id="flex">
+                    <div class="block">
+                        <div id="text">TEMPARATURE:</div>
+                        <div id="img"><i class="fa-solid fa-temperature-low fa-2xl" style="color: #ffffff;"></i></div>
+                        <div id="js"> <span id="temp"> </span>°C </div>
+                    </div>
+                    <div class="block">
+                        <div id="text">CLOUD %:</div>
+                        <div id="img"><i class="fa-solid fa-cloud fa-2xl" style="color: #ffffff;"></i></div>
+                        <div id="js"> <span id="cloud_pct"> </span>% </div>
+                    </div>
+                    <div class="block">
+                        <div id="text">FEELS LIKE:</div>
+                        <div id="img"><i class="fa-solid fa-bolt fa-2xl" style="color: #ffffff;"></i></div>
+                        <div id="js"> <span id="feels_like"> </span> </div>
+                    </div>
+                    <div class="block">
+                        <div id="text">HUMIDITY:</div>
+                        <div id="img"><i class="fa-solid fa-cloud-rain fa-2xl" style="color: #ffffff;"></i></div>
+                        <div id="js"> <span id="humidity"> </span>%</div>
+                    </div>
+                    <div class="block">
+                        <div id="text">MIN TEMP:</div>
+                        <div id="img"><i class="fa-solid fa-temperature-arrow-down fa-2xl" style="color: #ffffff;"></i>
+                        </div>
+                        <div id="js"> <span id="min_temp"> </span>%</div>
+                    </div>
+                    <div class="block">
+                        <div id="text">MAX TEMP:</div>
+                        <div id="img"><i class="fa-solid fa-temperature-arrow-up fa-2xl" style="color: #ffffff;"></i>
+                        </div>
+                        <div id="js"> <span id="max_temp"> </span>%</div>
+                    </div>
+                    <div class="block">
+                        <div id="text">WIND SPEED:</div>
+                        <div id="img"><i class="fa-solid fa-wind fa-2xl" style="color: #ffffff;"></i></div>
+                        <div id="js"> <span id="wind_speed"> </span>km/h</div>
+                    </div>
+                    <div class="block">
+                        <div id="text">WIND DEGREE:</div>
+                        <div id="img"><i class="fa-solid fa-paper-plane fa-2xl" style="color: #ffffff;"></i></div>
+                        <div id="js"> <span id="wind_degrees"> </span>°</div>
+                    </div>
+                    <div class="block">
+                        <div id="text">SUNSET:</div>
+                        <div id="img"><i class="fa-regular fa-sun fa-2xl" style="color: #ffffff;"></i></div>
+                        <div id="js"> <span id="sunset"> </span></div>
+                    </div>
+                    <div class="block">
+                        <div id="text">SUNRISE:</div>
+                        <div id="img"><i class="fa-solid fa-sun-plant-wilt fa-2xl" style="color: #ffffff;"></i></div>
+                        <div id="js"> <span id="sunrise"> </span></div>
+                    </div>
+                </div>
+            </div>
+
+<h2>7-DAY WEATHER REPORT</h2>
+<div id="flex" class="pad">
+            
+
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Temperature (°F)</th>
+                    <th>Humidity (%)</th>
+                    <th>Condition</th>
+                </tr>
+            
+            </table> </div>
+            <h4> <u><b>NOTE:</b></u> IF LOCATION IS NOT ENTERED THEN DEFAULT IS SET AS DELHI,LOADING CITY MAY TAKE FEW SECS</h4>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script src="script.js"></script>
+            <script src="script2.js"></script>
+            
+            <footer class="foot">
+
+               Designed and Developed by GUVVADI CHANDU &copy 2023 All copy rights reserved</footer>
+</body>
+
+</html>
