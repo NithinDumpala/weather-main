@@ -1,40 +1,26 @@
+<!-- script2.js -->
+// Uses window.dailyForecast set by script.js
+function populateForecast() {
+  const body = document.getElementById('forecast-table-body');
+  const daily = window.dailyForecast;
+  if (!daily) return;
 
-
-function generateRandomWeather() {
-    var temperature = Math.floor(Math.random() * (90 - 60 + 1)) + 60;
-    var humidity = Math.floor(Math.random() * (70 - 30 + 1)) + 30;
-    var conditions = ["Sunny", "Cloudy", "Rainy", "Stormy"];
-    var weatherCondition = conditions[Math.floor(Math.random() * conditions.length)];
-
-    return {
-        temperature: temperature,
-        humidity: humidity,
-        condition: weatherCondition,
-    };
+  body.innerHTML = '';
+  for (let i = 0; i < daily.time.length; i++) {
+    const date = daily.time[i];
+    const maxT = daily.temperature_2m_max[i];
+    const minT = daily.temperature_2m_min[i];
+    const row = `<tr>
+      <td>${date}</td>
+      <td>${maxT.toFixed(1)}</td>
+      <td>--</td>
+      <td>--</td>
+    </tr>`;
+    body.insertAdjacentHTML('beforeend', row);
+  }
 }
 
-
-function getWeatherReport() {
-    var start_date = new Date();
-    var num_days = 7;
-    var table = document.querySelector("table");
-
-    for (var i = 0; i < num_days; i++) {
-        var current_date = new Date(start_date.getTime() + i * 24 * 60 * 60 * 1000);
-        var weatherData = generateRandomWeather();
-
-        var row = table.insertRow(-1);
-        var dateCell = row.insertCell(0);
-        var temperatureCell = row.insertCell(1);
-        var humidityCell = row.insertCell(2);
-        var conditionCell = row.insertCell(3);
-
-        dateCell.innerHTML = current_date.toISOString().split('T')[0];
-        temperatureCell.innerHTML = weatherData.temperature + "°F";
-        humidityCell.innerHTML = weatherData.humidity + "%";
-        conditionCell.innerHTML = weatherData.condition;
-    }
-}
-
-
-getWeatherReport();
+document.addEventListener('DOMContentLoaded', () => {
+  // Delay to ensure window.dailyForecast is set
+  setTimeout(populateForecast, 1000);
+});
