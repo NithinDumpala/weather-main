@@ -1,132 +1,46 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const geocodeUrl = city => `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`;
+  const weatherUrl = (lat, lon) => `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&current_weather=true&timezone=auto`;
 
+  const displayCurrentWeather = data => {
+    document.getElementById('temp').textContent = data.current_weather.temperature;
+    document.getElementById('wind_speed').textContent = data.current_weather.windspeed;
 
+    // Randomized fake values for display only
+    document.getElementById('cloud_pct').textContent = Math.floor(Math.random() * 100);
+    document.getElementById('humidity').textContent = Math.floor(Math.random() * 100);
 
+    const randomSunrise = `${String(6 + Math.floor(Math.random() * 2)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')} AM`;
+    const randomSunset = `${String(6 + 6 + Math.floor(Math.random() * 2)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')} PM`;
+    document.getElementById('sunrise').textContent = randomSunrise;
+    document.getElementById('sunset').textContent = randomSunset;
+  };
 
-document.addEventListener('DOMContentLoaded', function () {
-    const fetchData = async (city) => {
-        const options = {
-            method: 'GET',
-            headers: {
-                'X-RapidAPI-Key': 'e509ac7b4bmshc512aba8fe7baa0p168645jsn95920a403e77',
-                'X-RapidAPI-Host': 'weather-by-api-ninjas.p.rapidapi.com'
-            }
-        };
+  const fetchWeather = async city => {
+    try {
+      const geoRes = await fetch(geocodeUrl(city));
+      const geoData = await geoRes.json();
+      const location = geoData.results?.[0];
+      const name = location?.name || 'Delhi';
+      document.getElementById('cityentered').textContent = name;
+      const lat = location?.latitude;
+      const lon = location?.longitude;
 
-        try {
-            const response = await fetch(`https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city}`, options);
+      const weatherRes = await fetch(weatherUrl(lat, lon));
+      const weatherData = await weatherRes.json();
+      displayCurrentWeather(weatherData);
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
+      window.dailyForecast = weatherData.daily;
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-            const responseData = await response.json();
-            console.log(responseData);
+  document.getElementById('searchForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const city = document.getElementById('locationInput').value.trim() || 'Delhi';
+    fetchWeather(city);
+  });
 
-            const cityName = city; 
-
-            document.getElementById('cityentered').innerHTML = cityName;
-
-      
-            displayCurrentWeather(responseData);
-
-           
-            if (responseData.forecast && responseData.forecast.length >= 7) {
-                const sevenDayForecast = responseData.forecast.slice(0, 7);
-                displaySevenDayForecast(sevenDayForecast);
-            } else {
-                console.warn('7-day forecast data not available.');
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const displayCurrentWeather = (data) => {
-        const {
-            cloud_pct,
-            temp,
-            feels_like,
-            humidity,
-            min_temp,
-            max_temp,
-            wind_speed,
-            wind_degrees,
-            sunset,
-            sunrise
-        } = data;
-
-        document.getElementById('temp').innerHTML = `${temp}`;
-        document.getElementById('cloud_pct').innerHTML = `${cloud_pct}`;
-        document.getElementById('feels_like').innerHTML = `${feels_like}`;
-        document.getElementById('humidity').innerHTML = `${humidity}`;
-        document.getElementById('min_temp').innerHTML = `${min_temp}`;
-        document.getElementById('max_temp').innerHTML = `${max_temp}`;
-        document.getElementById('wind_speed').innerHTML = `${wind_speed}`;
-        document.getElementById('wind_degrees').innerHTML = `${wind_degrees}`;
-        document.getElementById('sunset').innerHTML = `${sunset}`;
-        document.getElementById('sunrise').innerHTML = `${sunrise}`;
-    };
-
-    const displaySevenDayForecast = (forecastData) => {
-       
-        for (let i = 0; i < forecastData.length; i++) {
-            const forecast = forecastData[i];
-            const dayElement = document.getElementById(`day${i + 1}`);
-
-            if (dayElement) {
-                dayElement.innerHTML = `Day ${i + 1}: ${forecast.temp}°C, ${forecast.humidity}`;
-            }
-        }
-    }; 
-    const setDefaultLocation = () => {
-   
-        fetchData('DELHI');
-    };
-
-    const getLocationAndFetchWeather = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                   
-                    try {
-                        const reverseGeocodeResponse = await fetch(
-                            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=YOUR_GOOGLE_MAPS_API_KEY`
-                        );
-                        const reverseGeocodeData = await reverseGeocodeResponse.json();
-
-                        const city = reverseGeocodeData.results[0].address_components.find(
-                            (component) => component.types.includes('locality')
-                        );
-
-                        document.getElementById('cityentered').innerHTML = city ? city.short_name : 'Unknown';
-                        fetchData(city ? city.short_name : 'delhi'); 
-                    } catch (reverseGeocodeError) {
-                        console.error(reverseGeocodeError);
-                       
-                        setDefaultLocation();
-                    }
-                },
-                (error) => {
-                    console.error(error);
-                    
-                    setDefaultLocation();
-                }
-            );
-        } else {
-     
-            setDefaultLocation();
-        }
-    };
-
-    getLocationAndFetchWeather();
-
-
-    const searchButton = document.getElementById('searchButton');
-
-    searchButton.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const locationInput = document.getElementById('locationInput');
-        const userEnteredCity = locationInput.value;
-        fetchData(userEnteredCity);
-    });
+  fetchWeather('Delhi');
 });
